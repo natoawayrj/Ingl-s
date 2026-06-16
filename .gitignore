@@ -1,0 +1,21 @@
+# segredos — NUNCA versionar
+.env
+backend/.env
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# modelos / áudio (pesados, locais)
+*.bin
+*.wav
+*.webm
+
+# SO / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
