@@ -274,6 +274,8 @@ let mediaRecorder = null, chunks = [], audioBlob = null, recording = false;
 async function api(path, opts = {}) {
   opts.headers = opts.headers || {};
   if (token) opts.headers["Authorization"] = "Bearer " + token;
+  // pula a pagina de aviso do ngrok free (senao a API devolve HTML em vez de JSON)
+  opts.headers["ngrok-skip-browser-warning"] = "1";
   const r = await fetch(API + path, opts);
   if (r.status === 401) { logout(); throw new Error("Sessão expirada"); }
   if (!r.ok) {
@@ -291,7 +293,8 @@ async function doLogin() {
   document.getElementById("loginErr").textContent = "";
   try {
     const data = await fetch(API + "/login", {
-      method: "POST", headers: { "Content-Type": "application/json" },
+      method: "POST",
+      headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "1" },
       body: JSON.stringify({ email, password }),
     }).then(r => { if (!r.ok) throw new Error("Email ou senha inválidos"); return r.json(); });
     token = data.token; user = data.user;
@@ -328,7 +331,8 @@ async function enterApp() {
 
 async function checkStatus() {
   try {
-    const h = await fetch(API + "/health").then(r => r.json());
+    const h = await fetch(API + "/health",
+      { headers: { "ngrok-skip-browser-warning": "1" } }).then(r => r.json());
     const ok = h.db;
     document.getElementById("sysStatus").innerHTML =
       `<span class="status-dot ${ok ? "up" : "down"}"></span>` +
