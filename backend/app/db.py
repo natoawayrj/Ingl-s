@@ -2,7 +2,7 @@
 import pymysql
 from pymysql.cursors import DictCursor
 
-import config
+from . import config
 
 
 def get_conn():

@@ -8,7 +8,7 @@ import json
 
 import httpx
 
-import config
+from .. import config
 
 
 async def _chat_messages(messages: list[dict], temperature: float | None = None,

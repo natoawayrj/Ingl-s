@@ -8,21 +8,22 @@ Pipeline do modo leitura guiada:
   -> descarta audio, salva texto/feedback no MySQL
   -> devolve resultado
 
-Rode:  uvicorn main:app --reload --port 8000
+Rode (de dentro de backend/):  uvicorn app.main:app --reload --port 8000
 """
 import json
 import random
+from pathlib import Path
 
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Form, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-import config
-import db
-import auth
-from services import whisper_client, llm_client
-from services import diff as diffsvc
+from . import config
+from . import db
+from . import auth
+from .services import whisper_client, llm_client
+from .services import diff as diffsvc
 
 app = FastAPI(title="Pronuncia")
 
@@ -561,4 +562,6 @@ async def phoneme_report(
 # ============================================================
 # Frontend estático (serve a SPA)
 # ============================================================
-app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")
+# frontend fica em pronuncia/frontend (sobe de app/ -> backend/ -> pronuncia/)
+_FRONTEND = Path(__file__).resolve().parent.parent.parent / "frontend"
+app.mount("/", StaticFiles(directory=str(_FRONTEND), html=True), name="frontend")

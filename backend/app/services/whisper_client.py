@@ -13,7 +13,7 @@ import os
 
 import httpx
 
-import config
+from .. import config
 
 
 def _to_wav16k(raw: bytes) -> bytes:

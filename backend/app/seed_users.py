@@ -1,12 +1,12 @@
 """Cria os 3 usuários (você + 2 filhos) com senha já com hash.
 
-Uso:
-  python seed_users.py
+Uso (de dentro de backend/):
+  python -m app.seed_users
 Edite a lista USERS abaixo antes de rodar (nomes/emails/senhas/níveis).
 Rodar de novo NÃO duplica: usa ON DUPLICATE para atualizar senha/nível.
 """
-import auth
-import db
+from . import auth
+from . import db
 
 # Edite aqui:
 USERS = [

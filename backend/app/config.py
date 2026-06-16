@@ -1,8 +1,11 @@
-"""Configuração central — lê variáveis do .env."""
+"""Configuração central — lê variáveis do .env (em backend/env/.env)."""
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+# config.py está em backend/app/ ; o .env fica em backend/env/.env
+_ENV_PATH = Path(__file__).resolve().parent.parent / "env" / ".env"
+load_dotenv(_ENV_PATH)
 
 
 def _get(key: str, default: str = "") -> str:
