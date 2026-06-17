@@ -79,7 +79,7 @@ pronuncia/
 ### 1. Banco
 Abro o **Workbench** e rodo `backend/sql/schema.sql` (cria o database `pronuncia` e as tabelas).
 
-> **Já tinha o banco de antes?** Rodo também `backend/sql/migrate_add_explanation.sql`
+> **Já tinha o banco de antes?** Rodo também `backend/sql/migrations/migrate_add_explanation.sql`
 > (adiciona a coluna `explanation` em `attempts`, usada pela explicação fonética).
 
 ### 2. Backend
@@ -138,16 +138,31 @@ Logado como `parent`, aparecem 2 links no app:
   direcionar o estudo de cada um.
 
 ## Acesso dos filhos de fora de casa
-Pra eles acessarem fora de casa, exponho a porta 8000 com um túnel (o backend e a IA
-continuam na minha máquina):
-- **ngrok** — montei com domínio fixo grátis (`*.ngrok-free.app`). Rodo, de `backend/`:
-  `ngrok http --url=https://<meu-dominio>.ngrok-free.app 8000`.
-  O frontend manda o header `ngrok-skip-browser-warning` em todas as chamadas pra não
-  cair na tela de aviso do ngrok free.
-- Alternativas: **Cloudflare Tunnel** (URL aleatória no plano grátis) ou **Tailscale**
-  (privado, cada aparelho instala o app).
+Exponho a porta 8000 com **ngrok** (o backend e a IA continuam na minha máquina). Usei
+o domínio fixo grátis da conta, então a URL **não muda**:
+
+**https://oversold-starboard-elastic.ngrok-free.dev**
+
+- O frontend manda o header `ngrok-skip-browser-warning` em todas as chamadas pra não
+  cair na tela de aviso do ngrok free (senão a API devolve HTML e o login quebra).
+- Na 1ª visita o navegador mostra a tela "Visit Site" do ngrok — clico uma vez e entra.
+- Alternativas que considerei: **Cloudflare Tunnel** (URL aleatória no plano grátis) ou
+  **Tailscale** (privado, cada aparelho instala o app).
 - Na rede local sempre dá: eles acessam `http://MEU-IP:8000`.
 - Microfone exige contexto seguro: `localhost` e HTTPS (o túnel) funcionam; IP puro não.
+
+### Reerguer tudo (ex.: depois de reiniciar o PC)
+Ligo MySQL, LM Studio (server, porta 1234) e whisper.cpp (porta 8080). Depois, em dois
+terminais:
+```bash
+# 1) backend — de pronuncia/backend
+.venv\Scripts\activate
+uvicorn app.main:app --port 8000
+
+# 2) túnel ngrok (URL fixa)
+ngrok http --url=https://oversold-starboard-elastic.ngrok-free.dev 8000
+```
+O authtoken do ngrok já está salvo na máquina (`ngrok config add-authtoken …` só uma vez).
 
 ---
 
@@ -166,6 +181,70 @@ continuam na minha máquina):
 - [x] Backend organizado em app/ + sql/ + env/
 - [x] Túnel p/ acesso externo (ngrok com domínio fixo)
 - [ ] Ajuste fino dos prompts depois de testar com voz real
+
+## 🚧 EM ANDAMENTO: migração p/ Docker (backend + MySQL em container)
+
+> **Onde paramos (2026-06-17):** Docker Desktop instalado, vou reiniciar o PC.
+> Próximo passo ao voltar: criar os arquivos abaixo e subir `docker compose up`.
+
+**Decisão de arquitetura:**
+- **Vão pro container:** backend FastAPI + MySQL.
+- **Ficam no host (nativos):** whisper.cpp (GPU AMD/Vulkan — passthrough no Windows não vale) e LM Studio (app desktop). Continuam nas portas 8080 e 1234.
+- Backend no container fala com esses 2 serviços do host via `host.docker.internal`.
+
+**Detalhes técnicos já mapeados:**
+1. `config.py` usa `load_dotenv(override=False)` → **env do compose ganha sobre o `.env`**. Sobrescrevo só `DB_HOST`/`WHISPER_URL`/`LLM_URL` no compose; resto vem do `.env`. **Sem mudar código Python.**
+2. **ffmpeg** entra no Dockerfile (`apt install ffmpeg`) — some a dependência de PATH do host.
+3. Backend acha MySQL pelo nome do serviço compose (`db`), não `127.0.0.1`.
+4. Frontend é servido pelo backend (`app/main.py:567` monta `../../frontend`). Então **build context = raiz `pronuncia/`** (não só `backend/`), pra copiar `frontend/` junto. OU monto `frontend/` como volume.
+5. SQL auto-seed: montar `backend/sql/` em `/docker-entrypoint-initdb.d` roda `schema.sql` + `seed_phrases.sql` na 1ª subida (ordem alfabética — conferir nomes).
+6. `seed_users.py` roda à parte depois: `docker compose exec backend python -m app.seed_users`.
+
+**Arquivos a criar (ao voltar do reboot):**
+```
+pronuncia/
+  docker-compose.yml          # services: db (mysql:8) + backend
+  backend/
+    Dockerfile                # python:3.11-slim + ffmpeg + requirements + uvicorn
+    .dockerignore             # exclui .venv, env/.env, __pycache__
+```
+
+**Esboço do compose:**
+```yaml
+services:
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: pronuncia
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./backend/sql:/docker-entrypoint-initdb.d:ro
+    ports: ["3306:3306"]
+  backend:
+    build:
+      context: .                 # raiz pronuncia/ (precisa do frontend/)
+      dockerfile: backend/Dockerfile
+    environment:
+      DB_HOST: db
+      WHISPER_URL: http://host.docker.internal:8080/inference
+      LLM_URL: http://host.docker.internal:1234/v1/chat/completions
+    env_file: ./backend/env/.env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    ports: ["8000:8000"]
+    depends_on: [db]
+volumes:
+  dbdata: {}
+```
+
+**Pendências/cuidados:**
+- [ ] Criar Dockerfile, docker-compose.yml, .dockerignore
+- [ ] Migrar dados do MySQL atual (Workbench) → volume novo (mysqldump → restore), se quiser manter histórico
+- [ ] Conferir ordem de execução dos `.sql` no initdb (schema antes do seed)
+- [ ] `seed_users.py` via `docker compose exec` após 1ª subida
+- [ ] Whisper + LM Studio: lembrar de ligar no host antes do `compose up`
+
+---
 
 ## Notas técnicas
 - **faster-whisper não acelera na minha GPU AMD** (é CUDA). Por isso whisper.cpp + Vulkan.

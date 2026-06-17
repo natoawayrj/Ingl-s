@@ -1,0 +1,34 @@
+services:
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: pronuncia
+    volumes:
+      - dbdata:/var/lib/mysql
+      # roda schema.sql + seed_phrases.sql na 1ª subida (ordem alfabética)
+      - ./backend/sql:/docker-entrypoint-initdb.d:ro
+    ports: ["3307:3306"]   # host 3307 -> evita conflito com MySQL nativo (Workbench) na 3306
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-p${DB_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build:
+      context: .                  # raiz pronuncia/ (precisa do frontend/)
+      dockerfile: backend/Dockerfile
+    env_file: ./backend/env/.env  # senha MySQL, JWT, etc.
+    environment:                  # ganham sobre o .env (load_dotenv override=False)
+      DB_HOST: db
+      WHISPER_URL: http://host.docker.internal:8080/inference
+      LLM_URL: http://host.docker.internal:1234/v1/chat/completions
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    ports: ["8000:8000"]
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  dbdata: {}

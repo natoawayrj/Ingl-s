@@ -1,0 +1,6 @@
+# build context = raiz pronuncia/ ; paths relativos à raiz
+backend/.venv/
+backend/env/.env
+**/__pycache__/
+*.pyc
+.git/
