@@ -1,0 +1,16 @@
+{
+  "name": "Pronúncia — inglês",
+  "short_name": "Pronúncia",
+  "description": "Leitura guiada e conversa em inglês, com feedback de pronúncia.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#15120e",
+  "theme_color": "#15120e",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

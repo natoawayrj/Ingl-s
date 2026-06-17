@@ -25,6 +25,9 @@ services:
       WHISPER_URL: http://host.docker.internal:8080/inference
       LLM_URL: http://host.docker.internal:1234/v1/chat/completions
     extra_hosts: ["host.docker.internal:host-gateway"]
+    # frontend ao vivo: editar index.html/sw.js sem rebuild (só refresh no navegador)
+    volumes:
+      - ./frontend:/code/frontend:ro
     ports: ["8000:8000"]
     depends_on:
       db:

@@ -90,13 +90,29 @@ RECENT_PHRASE_WINDOW = 10
 
 
 @app.get("/api/phrase/next")
-async def next_phrase(level: str | None = None, user: dict = Depends(auth.current_user)):
-    """Sorteia uma frase do nivel do usuario, evitando as ultimas praticadas."""
+async def next_phrase(
+    level: str | None = None,
+    focus: str | None = None,
+    user: dict = Depends(auth.current_user),
+):
+    """Sorteia uma frase do nivel do usuario, evitando as ultimas praticadas.
+
+    Se 'focus' vier, prioriza frases daquele som (modo 'praticar sons fracos').
+    Sem frases do foco no nivel, cai pro nivel inteiro.
+    """
     lvl = level or user["level"]
-    rows = db.query_all(
-        "SELECT id, text, level, focus FROM phrases WHERE level=%s AND active=1",
-        (lvl,),
-    )
+    rows = []
+    if focus:
+        rows = db.query_all(
+            "SELECT id, text, level, focus FROM phrases "
+            "WHERE level=%s AND active=1 AND focus=%s",
+            (lvl, focus),
+        )
+    if not rows:
+        rows = db.query_all(
+            "SELECT id, text, level, focus FROM phrases WHERE level=%s AND active=1",
+            (lvl,),
+        )
     if not rows:
         raise HTTPException(
             status.HTTP_404_NOT_FOUND,
@@ -557,6 +573,15 @@ async def phoneme_report(
             for k in kids
         ]
     }
+
+
+@app.get("/api/report/my-phonemes")
+async def my_phoneme_report(user: dict = Depends(auth.current_user)):
+    """Dificuldade por som (focus) do PRÓPRIO usuário logado — pior primeiro.
+
+    Alimenta o modo 'praticar sons fracos': não exige ser parent (cada um vê o seu).
+    """
+    return {"by_focus": _child_phoneme_report(user["id"])}
 
 
 # ============================================================
