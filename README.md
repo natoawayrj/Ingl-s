@@ -164,6 +164,13 @@ ngrok http --url=https://oversold-starboard-elastic.ngrok-free.dev 8000
 ```
 O authtoken do ngrok já está salvo na máquina (`ngrok config add-authtoken …` só uma vez).
 
+> **ngrok agora sobe sozinho no logon.** Uma tarefa de Inicialização do Windows
+> (`Startup\PronunciaNgrok.vbs` → `start-ngrok.ps1`) abre o túnel escondido ~30s após
+> o login, sem duplicar se já houver um. Não preciso mais rodar o passo 2 à mão — só
+> garanto Docker/whisper/LM Studio ligados. Pra desativar: apago o `.vbs` da pasta
+> Inicializar (`shell:startup`). O erro `ERR_NGROK_3200` ("endpoint offline") quer dizer
+> só que o túnel não está no ar — o ngrok é um 4º processo, separado do backend/IA.
+
 ---
 
 ## Status do projeto
