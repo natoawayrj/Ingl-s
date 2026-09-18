@@ -25,6 +25,11 @@ Eu controlo ligar/desligar; o app mostra "no ar / offline" no topo.
 
 `Python` · `FastAPI` · `MySQL` · `Docker Compose` · `whisper.cpp` · `LLM local (LM Studio)` · `JWT` · `PWA`
 
+> **Clonou o repo?** Ele vem apontado pros motores de IA que rodam **na minha máquina**
+> (Whisper e LLM locais), que não existem na sua. Antes de subir, edite o `.env` seguindo
+> [Trocar os motores de IA](#trocar-os-motores-de-ia-leia-antes-de-clonar) — dá pra rodar
+> tudo local de graça ou apontar pra uma API paga, sem tocar em código.
+
 > Se você veio ver a parte de dados: [modelagem e decisões de dados](#modelagem-e-decisões-de-dados)
 > (pipeline de ingestão, por que o histórico é imutável, índices, retenção e o que eu faria
 > diferente em escala).
@@ -83,6 +88,89 @@ pronuncia/
    ./build/bin/whisper-server -m models/ggml-medium.en.bin --host 127.0.0.1 --port 8080
    ```
    (Sem GPU/Vulkan roda em CPU, só mais lento. Frase curta = ok.)
+
+---
+
+## Trocar os motores de IA (leia antes de clonar)
+
+O app depende de **dois motores de IA**, e o repositório vem configurado pros que rodam
+na minha máquina. Se você clonou, esses endereços não existem aí — **é aqui que você
+precisa mexer**. Os dois são trocáveis **só pelo `.env`, sem tocar em código**.
+
+| Motor | Pra que serve | Variáveis |
+|---|---|---|
+| **STT** (fala → texto) | transcrever o áudio lido e a voz no chat | `WHISPER_PROVIDER`, `WHISPER_URL` **ou** `OPENAI_API_KEY` |
+| **LLM** (texto → texto) | feedback, explicação fonética, chat, gerar frases | `LLM_URL`, `LLM_MODEL`, `LLM_API_KEY` |
+
+### Opção A — tudo local, de graça (é como eu uso)
+
+Nada sai da sua máquina, custo zero, mas você precisa subir os dois servidores
+(ver [Pré-requisitos](#pré-requisitos)) e ter GPU ou paciência.
+
+```ini
+WHISPER_PROVIDER=whispercpp
+WHISPER_URL=http://127.0.0.1:8080/inference
+
+LLM_URL=http://127.0.0.1:1234/v1/chat/completions   # LM Studio
+LLM_MODEL=qwen2.5-7b-instruct
+LLM_API_KEY=                                        # vazio: local não pede chave
+```
+
+Serve qualquer servidor **OpenAI-compatible**, não só o LM Studio. Com Ollama, por
+exemplo, muda só a URL e o nome do modelo:
+
+```ini
+LLM_URL=http://127.0.0.1:11434/v1/chat/completions
+LLM_MODEL=qwen2.5:7b-instruct
+```
+
+### Opção B — API paga (sem servidor local, mas custa e o dado sai)
+
+Se você não quer subir nada, aponte pros endpoints de um provedor e preencha as chaves.
+O `LLM_API_KEY` vai como `Authorization: Bearer` — se estiver vazio, nenhum header é
+enviado, que é o que faz o modo local funcionar.
+
+```ini
+# STT pela OpenAI (o áudio SAI da sua máquina)
+WHISPER_PROVIDER=openai
+OPENAI_API_KEY=sk-...
+OPENAI_WHISPER_MODEL=whisper-1
+
+# LLM por qualquer provedor OpenAI-compatible
+LLM_URL=https://api.openai.com/v1/chat/completions
+LLM_MODEL=gpt-4o-mini
+LLM_API_KEY=sk-...
+```
+
+Groq e OpenRouter funcionam igual, trocando só a `LLM_URL`:
+
+```ini
+LLM_URL=https://api.groq.com/openai/v1/chat/completions
+LLM_URL=https://openrouter.ai/api/v1/chat/completions
+```
+
+Dá pra misturar: **STT local + LLM na nuvem** (ou o contrário). São independentes.
+
+> ⚠️ **Se você usa Docker e API paga, o `.env` não basta.** O `docker-compose.yml` força
+> `WHISPER_URL` e `LLM_URL` pra `host.docker.internal` (é como o container acha os
+> servidores locais), e `environment:` ganha do `env_file:`. Então comente essas duas
+> linhas no compose, senão sua URL da OpenAI é ignorada em silêncio e você leva
+> `Connection refused` sem entender por quê.
+
+### Dois avisos
+
+- **Não é qualquer API, é qualquer API OpenAI-compatible.** Provedores com formato
+  próprio de requisição precisariam de um adaptador em
+  `backend/app/services/llm_client.py` — hoje o cliente fala só esse dialeto.
+- **Prefira modelo não-thinking.** Modelo "reasoning" gasta o orçamento de tokens
+  pensando antes de responder: ~8x mais lento aqui (59s contra 7,5s numa explicação) e
+  às vezes devolve conteúdo vazio. O cliente tem fallback, mas o certo é não usar.
+
+### Se algo não subir
+
+O topo do app mostra **"no ar / offline"**, e aí o problema é quase sempre um destes:
+`Connection refused` na porta 8080 (whisper.cpp desligado), na 1234 (LM Studio sem o
+Server ligado), ou **`401`** (apontou pra API paga e esqueceu a chave).
 
 ---
 

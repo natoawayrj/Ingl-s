@@ -1,8 +1,13 @@
-"""Cliente do LLM local (LM Studio, API OpenAI-compatible).
+"""Cliente do LLM — qualquer endpoint OpenAI-compatible.
+
+Por padrão aponta pro LM Studio local (sem chave). Pra usar uma API paga
+(OpenAI, Groq, OpenRouter...), basta trocar LLM_URL/LLM_MODEL no .env e
+preencher LLM_API_KEY — o header Authorization só vai quando a chave existe.
 
 Usado para:
   1) gerar feedback de pronúncia (modo leitura guiada)
   2) gerar frases-alvo por nível (em lote)
+  3) conversar (chat multi-turno)
 """
 import json
 
@@ -21,8 +26,13 @@ async def _chat_messages(messages: list[dict], temperature: float | None = None,
         "max_tokens": max_tokens,
         "stream": False,
     }
+    # Servidor local não pede chave; API paga pede. Só mando o header se houver.
+    headers = {}
+    if config.LLM_API_KEY:
+        headers["Authorization"] = f"Bearer {config.LLM_API_KEY}"
+
     async with httpx.AsyncClient(timeout=300) as client:
-        resp = await client.post(config.LLM_URL, json=payload)
+        resp = await client.post(config.LLM_URL, json=payload, headers=headers)
         resp.raise_for_status()
         body = resp.json()
 

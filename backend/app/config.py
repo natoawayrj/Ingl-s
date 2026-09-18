@@ -35,10 +35,13 @@ OPENAI_WHISPER_URL = _get(
 )
 OPENAI_WHISPER_MODEL = _get("OPENAI_WHISPER_MODEL", "whisper-1")
 
-# LLM local (LM Studio, OpenAI-compatible)
+# LLM: qualquer endpoint OpenAI-compatible. Por padrão o LM Studio local.
 LLM_URL = _get("LLM_URL", "http://127.0.0.1:1234/v1/chat/completions")
 LLM_MODEL = _get("LLM_MODEL", "gemma-4-12b-it")
 LLM_TEMPERATURE = float(_get("LLM_TEMPERATURE", "0.3"))
+# Vazio p/ servidor local (LM Studio, Ollama, vLLM não pedem chave). Preencha
+# só se apontar LLM_URL p/ uma API paga (OpenAI, Groq, OpenRouter...).
+LLM_API_KEY = _get("LLM_API_KEY", "")
 
 # Pronúncia: abaixo deste accuracy (0..1), o LLM gera explicação fonética
 # detalhada (posição de língua/boca). Acima, só o feedback curto basta.

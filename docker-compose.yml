@@ -22,6 +22,9 @@ services:
     env_file: ./backend/env/.env  # senha MySQL, JWT, etc.
     environment:                  # ganham sobre o .env (load_dotenv override=False)
       DB_HOST: db
+      # Apontam pros motores de IA rodando no HOST (fora do container).
+      # Se for usar API paga (OpenAI/Groq/...), comente as 2 linhas abaixo e
+      # deixe a URL vir do .env — senao ela e ignorada em silencio.
       WHISPER_URL: http://host.docker.internal:8080/inference
       LLM_URL: http://host.docker.internal:1234/v1/chat/completions
     extra_hosts: ["host.docker.internal:host-gateway"]
