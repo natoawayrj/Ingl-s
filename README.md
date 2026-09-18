@@ -31,6 +31,9 @@ Eu controlo ligar/desligar; o app mostra "no ar / offline" no topo.
 pronuncia/
   frontend/
     index.html              # SPA inteira (HTML/CSS/JS, sem build)
+    manifest.json           # PWA: dá pra instalar no celular
+    sw.js                   # service worker
+    icon.svg
   backend/
     app/                    # código Python (pacote)
       main.py               # rotas FastAPI
@@ -39,9 +42,12 @@ pronuncia/
       auth.py               # JWT + hash de senha
       seed_users.py         # cria os 3 usuários
       services/             # whisper_client, llm_client, diff
-    sql/                    # schema.sql, seed_phrases.sql, migrate_*.sql
+    sql/                    # schema.sql, seed_phrases.sql, migrations/
     env/                    # .env (real, fora do git) e .env.example
+    Dockerfile              # python:3.11-slim + ffmpeg
     requirements.txt
+  docker-compose.yml        # db (mysql:8) + backend
+  start-ngrok.ps1           # sobe o túnel no logon do Windows
 ```
 
 > Organizei em `app/` (código), `sql/` (dados) e `env/` (configuração) pra não ficar
@@ -75,6 +81,10 @@ pronuncia/
 ---
 
 ## Setup (uma vez)
+
+> Este é o caminho **nativo** (venv + MySQL do Workbench), que foi como comecei.
+> Hoje eu subo por Docker — ver [Rodar com Docker](#rodar-com-docker-backend--mysql-em-container).
+> De qualquer jeito, whisper.cpp e LM Studio continuam ligados no host nos dois caminhos.
 
 ### 1. Banco
 Abro o **Workbench** e rodo `backend/sql/schema.sql` (cria o database `pronuncia` e as tabelas).
@@ -139,9 +149,8 @@ Logado como `parent`, aparecem 2 links no app:
 
 ## Acesso dos filhos de fora de casa
 Exponho a porta 8000 com **ngrok** (o backend e a IA continuam na minha máquina). Usei
-o domínio fixo grátis da conta, então a URL **não muda**:
-
-**https://oversold-starboard-elastic.ngrok-free.dev**
+o domínio fixo grátis da conta, então a URL **não muda** (a minha eu não publico aqui —
+fica em variável de ambiente, ver abaixo).
 
 - O frontend manda o header `ngrok-skip-browser-warning` em todas as chamadas pra não
   cair na tela de aviso do ngrok free (senão a API devolve HTML e o login quebra).
@@ -159,8 +168,8 @@ terminais:
 .venv\Scripts\activate
 uvicorn app.main:app --port 8000
 
-# 2) túnel ngrok (URL fixa)
-ngrok http --url=https://oversold-starboard-elastic.ngrok-free.dev 8000
+# 2) túnel ngrok (URL fixa — vem da variável de ambiente)
+ngrok http --url=$env:PRONUNCIA_NGROK_URL 8000
 ```
 O authtoken do ngrok já está salvo na máquina (`ngrok config add-authtoken …` só uma vez).
 
@@ -170,6 +179,15 @@ O authtoken do ngrok já está salvo na máquina (`ngrok config add-authtoken �
 > garanto Docker/whisper/LM Studio ligados. Pra desativar: apago o `.vbs` da pasta
 > Inicializar (`shell:startup`). O erro `ERR_NGROK_3200` ("endpoint offline") quer dizer
 > só que o túnel não está no ar — o ngrok é um 4º processo, separado do backend/IA.
+
+> **Configuração do script (uma vez).** O `start-ngrok.ps1` não tem a URL nem o caminho
+> do ngrok escritos no código — lê das variáveis de ambiente do usuário, pra o domínio
+> não ir parar no repositório:
+> ```powershell
+> [Environment]::SetEnvironmentVariable("PRONUNCIA_NGROK_URL", "https://SEU-DOMINIO.ngrok-free.dev", "User")
+> [Environment]::SetEnvironmentVariable("PRONUNCIA_NGROK_BIN", "C:\caminho\para\ngrok.exe", "User")
+> ```
+> Se o `ngrok` já estiver no PATH, a segunda não é necessária.
 
 ---
 
@@ -186,70 +204,43 @@ O authtoken do ngrok já está salvo na máquina (`ngrok config add-authtoken �
 - [x] Frontend: login, leitura guiada, gravação, diff colorido, feedback, histórico
 - [x] Áudio descartado (nunca persistido)
 - [x] Backend organizado em app/ + sql/ + env/
-- [x] Túnel p/ acesso externo (ngrok com domínio fixo)
+- [x] Túnel p/ acesso externo (ngrok com domínio fixo, sobe sozinho no logon)
+- [x] Docker: backend + MySQL em container (`docker compose up`)
+- [x] PWA instalável (manifest + service worker) — dá pra "instalar" no celular
+- [x] Praticar sons fracos: sorteia frases do som que a pessoa mais erra
 - [ ] Ajuste fino dos prompts depois de testar com voz real
 
-## 🚧 EM ANDAMENTO: migração p/ Docker (backend + MySQL em container)
+## Rodar com Docker (backend + MySQL em container)
 
-> **Onde paramos (2026-06-17):** Docker Desktop instalado, vou reiniciar o PC.
-> Próximo passo ao voltar: criar os arquivos abaixo e subir `docker compose up`.
+Hoje subo tudo com um comando só. **Vai pro container:** backend FastAPI + MySQL.
+**Fica nativo no host:** whisper.cpp (GPU AMD via Vulkan — passthrough no Windows não
+vale a pena) e LM Studio (app desktop). O backend do container fala com esses dois pelo
+`host.docker.internal`.
 
-**Decisão de arquitetura:**
-- **Vão pro container:** backend FastAPI + MySQL.
-- **Ficam no host (nativos):** whisper.cpp (GPU AMD/Vulkan — passthrough no Windows não vale) e LM Studio (app desktop). Continuam nas portas 8080 e 1234.
-- Backend no container fala com esses 2 serviços do host via `host.docker.internal`.
+```bash
+# de dentro de pronuncia/ (com Docker Desktop, whisper e LM Studio ligados)
+docker compose up -d
 
-**Detalhes técnicos já mapeados:**
-1. `config.py` usa `load_dotenv(override=False)` → **env do compose ganha sobre o `.env`**. Sobrescrevo só `DB_HOST`/`WHISPER_URL`/`LLM_URL` no compose; resto vem do `.env`. **Sem mudar código Python.**
-2. **ffmpeg** entra no Dockerfile (`apt install ffmpeg`) — some a dependência de PATH do host.
-3. Backend acha MySQL pelo nome do serviço compose (`db`), não `127.0.0.1`.
-4. Frontend é servido pelo backend (`app/main.py:567` monta `../../frontend`). Então **build context = raiz `pronuncia/`** (não só `backend/`), pra copiar `frontend/` junto. OU monto `frontend/` como volume.
-5. SQL auto-seed: montar `backend/sql/` em `/docker-entrypoint-initdb.d` roda `schema.sql` + `seed_phrases.sql` na 1ª subida (ordem alfabética — conferir nomes).
-6. `seed_users.py` roda à parte depois: `docker compose exec backend python -m app.seed_users`.
-
-**Arquivos a criar (ao voltar do reboot):**
+# só na 1ª subida: cria os 3 usuários
+docker compose exec backend python -m app.seed_users
 ```
-pronuncia/
-  docker-compose.yml          # services: db (mysql:8) + backend
-  backend/
-    Dockerfile                # python:3.11-slim + ffmpeg + requirements + uvicorn
-    .dockerignore             # exclui .venv, env/.env, __pycache__
-```
+Abro **http://127.0.0.1:8000**.
 
-**Esboço do compose:**
-```yaml
-services:
-  db:
-    image: mysql:8
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: pronuncia
-    volumes:
-      - dbdata:/var/lib/mysql
-      - ./backend/sql:/docker-entrypoint-initdb.d:ro
-    ports: ["3306:3306"]
-  backend:
-    build:
-      context: .                 # raiz pronuncia/ (precisa do frontend/)
-      dockerfile: backend/Dockerfile
-    environment:
-      DB_HOST: db
-      WHISPER_URL: http://host.docker.internal:8080/inference
-      LLM_URL: http://host.docker.internal:1234/v1/chat/completions
-    env_file: ./backend/env/.env
-    extra_hosts: ["host.docker.internal:host-gateway"]
-    ports: ["8000:8000"]
-    depends_on: [db]
-volumes:
-  dbdata: {}
-```
+Detalhes que valem lembrar:
+- `config.py` usa `load_dotenv(override=False)`, então o env do compose **ganha** sobre o
+  `.env`. Sobrescrevo só `DB_HOST` / `WHISPER_URL` / `LLM_URL` — o resto vem do `.env`.
+  Não precisei mexer em nada do Python.
+- **ffmpeg** está no Dockerfile, então sumiu a dependência de PATH do host.
+- O MySQL do container expõe a **porta 3307** no host (3306 continua com o MySQL nativo do
+  Workbench, sem conflito).
+- `backend/sql/` é montado em `/docker-entrypoint-initdb.d`, então `schema.sql` e
+  `seed_phrases.sql` rodam sozinhos na 1ª subida (ordem alfabética).
+- Build context é a raiz `pronuncia/` (não só `backend/`), porque o backend serve o
+  `frontend/`. Além disso `frontend/` entra como volume read-only: edito o `index.html` e
+  basta dar refresh, sem rebuild.
 
-**Pendências/cuidados:**
-- [ ] Criar Dockerfile, docker-compose.yml, .dockerignore
-- [ ] Migrar dados do MySQL atual (Workbench) → volume novo (mysqldump → restore), se quiser manter histórico
-- [ ] Conferir ordem de execução dos `.sql` no initdb (schema antes do seed)
-- [ ] `seed_users.py` via `docker compose exec` após 1ª subida
-- [ ] Whisper + LM Studio: lembrar de ligar no host antes do `compose up`
+Pendente: migrar o histórico do MySQL antigo (Workbench) pro volume novo via
+`mysqldump` → restore, se eu quiser manter as tentativas de antes.
 
 ---
 

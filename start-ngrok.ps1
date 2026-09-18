@@ -1,7 +1,27 @@
-# Sobe o tunel ngrok (URL fixa) escondido. Chamado pela tarefa agendada no logon.
-$ngrok = "C:\Users\natoa\AppData\Local\Microsoft\WinGet\Packages\Ngrok.Ngrok_Microsoft.Winget.Source_8wekyb3d8bbwe\ngrok.exe"
-$url   = "https://oversold-starboard-elastic.ngrok-free.dev"
-$port  = 8000
+# Sobe o tunel ngrok (URL fixa) escondido. Chamado pela tarefa de Inicializacao no logon.
+#
+# Configure antes de usar (uma vez, no seu usuario do Windows):
+#   [Environment]::SetEnvironmentVariable("PRONUNCIA_NGROK_URL", "https://SEU-DOMINIO.ngrok-free.dev", "User")
+#   [Environment]::SetEnvironmentVariable("PRONUNCIA_NGROK_BIN", "C:\caminho\para\ngrok.exe", "User")
+# O binario tambem e encontrado automaticamente se o ngrok estiver no PATH.
+
+$url = $env:PRONUNCIA_NGROK_URL
+if (-not $url) {
+  Write-Error "PRONUNCIA_NGROK_URL nao definida. Veja o cabecalho deste script."
+  exit 1
+}
+
+$ngrok = $env:PRONUNCIA_NGROK_BIN
+if (-not $ngrok) {
+  $cmd = Get-Command ngrok -ErrorAction SilentlyContinue
+  if ($cmd) { $ngrok = $cmd.Source }
+}
+if (-not $ngrok -or -not (Test-Path $ngrok)) {
+  Write-Error "ngrok.exe nao encontrado. Defina PRONUNCIA_NGROK_BIN ou ponha o ngrok no PATH."
+  exit 1
+}
+
+$port = 8000
 
 # espera Docker/backend subir antes de abrir o tunel
 Start-Sleep -Seconds 30
