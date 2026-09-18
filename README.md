@@ -23,6 +23,12 @@ Frontend (navegador)  ──>  Backend FastAPI  ──>  Whisper local (whisper.
 
 Eu controlo ligar/desligar; o app mostra "no ar / offline" no topo.
 
+`Python` · `FastAPI` · `MySQL` · `Docker Compose` · `whisper.cpp` · `LLM local (LM Studio)` · `JWT` · `PWA`
+
+> Se você veio ver a parte de dados: [modelagem e decisões de dados](#modelagem-e-decisões-de-dados)
+> (pipeline de ingestão, por que o histórico é imutável, índices, retenção e o que eu faria
+> diferente em escala).
+
 ---
 
 ## Estrutura
@@ -241,6 +247,93 @@ Detalhes que valem lembrar:
 
 Pendente: migrar o histórico do MySQL antigo (Workbench) pro volume novo via
 `mysqldump` → restore, se eu quiser manter as tentativas de antes.
+
+---
+
+## Modelagem e decisões de dados
+
+Essa parte foi o que mais me deu trabalho de pensar, então deixo registrado o porquê
+de cada escolha — não só o que ficou.
+
+### O pipeline de uma tentativa
+
+```
+áudio (webm, navegador)
+   → ffmpeg            converte p/ wav 16kHz mono
+   → whisper.cpp       transcreve (STT) — o que foi REALMENTE falado
+   → diff.py           alinha alvo × transcrição (SequenceMatcher)
+   → LLM local         feedback curto; se accuracy < 0.8, 2ª chamada p/ explicação fonética
+   → MySQL             persiste texto + diff + métricas. Áudio é descartado aqui.
+```
+
+A frase-alvo funciona como **ground truth**: se o Whisper ouviu outra coisa, ou houve erro
+de pronúncia ou a palavra sumiu. O `diff.py` classifica cada palavra do alvo em
+`ok` / `wrong` / `missing` (e lista as `extra` que o Whisper ouviu a mais), e a
+`accuracy` é a fração de palavras-alvo corretas. Esse dicionário inteiro vai pro
+`attempts.diff_json`.
+
+### As três tabelas
+
+| Tabela | Papel | Cresce? |
+|---|---|---|
+| `users` | quem pratica (3 pessoas, `parent` / `child`) | não |
+| `phrases` | catálogo de frases-alvo, com `level` e `focus` (o som treinado) | devagar |
+| `attempts` | uma linha por tentativa: transcrição, diff, feedback, wpm | sempre |
+
+Na prática `users` e `phrases` são dimensões e `attempts` é o fato — só não usei esses
+nomes no schema porque o app é pequeno.
+
+### Decisões que tomei de propósito
+
+**Guardo o texto da frase dentro da tentativa.** `attempts.target_text` é uma cópia do
+`phrases.text` no momento em que a pessoa praticou. É redundante de propósito: se eu
+editar a frase depois pelo painel admin, o histórico antigo continua contando a verdade
+do que foi lido naquele dia. Sem isso, editar uma frase reescreveria o passado.
+
+**Não existe DELETE de frase, só `active = 0`.** A FK `attempts → phrases` é
+`ON DELETE CASCADE`, então apagar uma frase levaria junto todas as tentativas dela.
+Desativar tira a frase do sorteio e preserva a linhagem. O botão do admin faz isso.
+
+**`diff_json` é JSON dentro do MySQL.** O resultado do diff tem formato variável (lista de
+palavras com status, palavras extras, accuracy). Normalizar isso em `attempt_words` daria
+uma tabela enorme pra um app de 3 pessoas. Guardo semi-estruturado e agrego na leitura.
+
+**Áudio nunca é persistido, em nenhum dos modos.** O arquivo vive em temporário durante a
+requisição e morre. Voz de criança é dado biométrico; não quis ter isso em disco. A
+conversa do chat também é efêmera — vive só na memória do navegador, nada vai pro banco.
+Por isso a tabela `attempts` guarda **texto**, nunca mídia.
+
+**Índices pensados pelas duas leituras que existem.** `idx_user_time (user_id, created_at)`
+serve o histórico e as estatísticas de uma pessoa; `idx_level (level, active)` serve o
+sorteio da próxima frase, que sempre filtra por nível e ativo.
+
+### O que me dá a leitura analítica
+
+Duas agregações em cima de `attempts`:
+
+- **`/api/stats`** (cada um vê o seu) — total de tentativas, accuracy média, wpm médio,
+  streak de dias seguidos e as palavras mais erradas.
+- **`/api/report/phonemes`** (só `parent`) — junta `attempts` com `phrases` e agrupa pelo
+  `focus` da frase, ou seja, **pelo som treinado**. Pra cada som: quantas tentativas,
+  accuracy média e as palavras que mais falham. Ordeno da pior accuracy pra melhor, então
+  a primeira linha do relatório é literalmente o que o filho precisa treinar hoje. Isso
+  realimenta o app: o modo **praticar sons fracos** sorteia frases desse `focus`.
+
+### Limitações que eu conheço
+
+Prefiro deixar explícito a fingir que não existem:
+
+- **As duas agregações rodam em Python, não em SQL.** Puxo as linhas do usuário e somo em
+  dicionário, porque a accuracy mora dentro do `diff_json` e eu queria o cálculo legível.
+  Com 3 usuários isso é instantâneo. Crescendo, o certo seria `GROUP BY` com
+  `JSON_EXTRACT` (ou uma coluna `accuracy` materializada na escrita) e janela de tempo —
+  hoje a query não tem `LIMIT`.
+- **Sem camada analítica separada.** Não há view nem tabela agregada; as métricas são
+  calculadas a cada request. Num volume maior, valeria materializar por dia.
+- **Migrations são manuais.** `sql/migrations/` tem arquivos avulsos que eu rodo à mão,
+  sem versionamento nem rollback. Com mais gente mexendo, entraria Alembic.
+- **`diff_json` não tem contrato validado** no banco — quem garante o formato é o
+  `diff.py`, do lado da aplicação.
 
 ---
 
