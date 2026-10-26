@@ -1,0 +1,551 @@
+[
+  {
+    "id": "a_impressed",
+    "target": "His sophisticated vocabulary impressed the whole department.",
+    "transcription": "Hey, sophisticated vocabulary impresses the whole department.",
+    "focus": "-ed + consonant",
+    "diff_json": {
+      "words": [
+        {
+          "word": "his",
+          "status": "wrong"
+        },
+        {
+          "word": "sophisticated",
+          "status": "ok"
+        },
+        {
+          "word": "vocabulary",
+          "status": "ok"
+        },
+        {
+          "word": "impressed",
+          "status": "wrong"
+        },
+        {
+          "word": "the",
+          "status": "ok"
+        },
+        {
+          "word": "whole",
+          "status": "ok"
+        },
+        {
+          "word": "department",
+          "status": "ok"
+        }
+      ],
+      "extra": [
+        "hey",
+        "impresses"
+      ],
+      "accuracy": 0.714,
+      "summary": "5 de 7 palavras bateram com o alvo"
+    }
+  },
+  {
+    "id": "b_acknowledged",
+    "target": "We acknowledged the strengths and weaknesses of the strategy.",
+    "transcription": "We acknowledge the strengths and weaknesses of this tradition.",
+    "focus": "cluster str + -ths",
+    "diff_json": {
+      "words": [
+        {
+          "word": "we",
+          "status": "ok"
+        },
+        {
+          "word": "acknowledged",
+          "status": "wrong"
+        },
+        {
+          "word": "the",
+          "status": "ok"
+        },
+        {
+          "word": "strengths",
+          "status": "ok"
+        },
+        {
+          "word": "and",
+          "status": "ok"
+        },
+        {
+          "word": "weaknesses",
+          "status": "ok"
+        },
+        {
+          "word": "of",
+          "status": "ok"
+        },
+        {
+          "word": "the",
+          "status": "wrong"
+        },
+        {
+          "word": "strategy",
+          "status": "wrong"
+        }
+      ],
+      "extra": [
+        "acknowledge",
+        "this",
+        "tradition"
+      ],
+      "accuracy": 0.667,
+      "summary": "6 de 9 palavras bateram com o alvo"
+    }
+  },
+  {
+    "id": "c_th",
+    "target": "I think this is the right thing to do.",
+    "transcription": "I sink this is the right sing to do.",
+    "focus": "seed: TH /θ/ /ð/",
+    "diff_json": {
+      "words": [
+        {
+          "word": "i",
+          "status": "ok"
+        },
+        {
+          "word": "think",
+          "status": "wrong"
+        },
+        {
+          "word": "this",
+          "status": "ok"
+        },
+        {
+          "word": "is",
+          "status": "ok"
+        },
+        {
+          "word": "the",
+          "status": "ok"
+        },
+        {
+          "word": "right",
+          "status": "ok"
+        },
+        {
+          "word": "thing",
+          "status": "wrong"
+        },
+        {
+          "word": "to",
+          "status": "ok"
+        },
+        {
+          "word": "do",
+          "status": "ok"
+        }
+      ],
+      "extra": [
+        "sink",
+        "sing"
+      ],
+      "accuracy": 0.778,
+      "summary": "7 de 9 palavras bateram com o alvo"
+    }
+  },
+  {
+    "id": "d_ship",
+    "target": "My ship is bigger than that little sheep.",
+    "transcription": "My sheep is bigger than that little ship.",
+    "focus": "seed: /ɪ/ vs /iː/",
+    "diff_json": {
+      "words": [
+        {
+          "word": "my",
+          "status": "ok"
+        },
+        {
+          "word": "ship",
+          "status": "wrong"
+        },
+        {
+          "word": "is",
+          "status": "ok"
+        },
+        {
+          "word": "bigger",
+          "status": "ok"
+        },
+        {
+          "word": "than",
+          "status": "ok"
+        },
+        {
+          "word": "that",
+          "status": "ok"
+        },
+        {
+          "word": "little",
+          "status": "ok"
+        },
+        {
+          "word": "sheep",
+          "status": "wrong"
+        }
+      ],
+      "extra": [
+        "sheep",
+        "ship"
+      ],
+      "accuracy": 0.75,
+      "summary": "6 de 8 palavras bateram com o alvo"
+    }
+  },
+  {
+    "id": "e_final",
+    "target": "The dog and the cat live in a small house.",
+    "transcription": "The do and the ca live in a small house.",
+    "focus": "seed: consoante final",
+    "diff_json": {
+      "words": [
+        {
+          "word": "the",
+          "status": "ok"
+        },
+        {
+          "word": "dog",
+          "status": "wrong"
+        },
+        {
+          "word": "and",
+          "status": "ok"
+        },
+        {
+          "word": "the",
+          "status": "ok"
+        },
+        {
+          "word": "cat",
+          "status": "wrong"
+        },
+        {
+          "word": "live",
+          "status": "ok"
+        },
+        {
+          "word": "in",
+          "status": "ok"
+        },
+        {
+          "word": "a",
+          "status": "ok"
+        },
+        {
+          "word": "small",
+          "status": "ok"
+        },
+        {
+          "word": "house",
+          "status": "ok"
+        }
+      ],
+      "extra": [
+        "do",
+        "ca"
+      ],
+      "accuracy": 0.8,
+      "summary": "8 de 10 palavras bateram com o alvo"
+    }
+  },
+  {
+    "id": "f_ed",
+    "target": "She walked to school and played all day.",
+    "transcription": "She walk to school and play all day.",
+    "focus": "seed: -ed endings",
+    "diff_json": {
+      "words": [
+        {
+          "word": "she",
+          "status": "ok"
+        },
+        {
+          "word": "walked",
+          "status": "wrong"
+        },
+        {
+          "word": "to",
+          "status": "ok"
+        },
+        {
+          "word": "school",
+          "status": "ok"
+        },
+        {
+          "word": "and",
+          "status": "ok"
+        },
+        {
+          "word": "played",
+          "status": "wrong"
+        },
+        {
+          "word": "all",
+          "status": "ok"
+        },
+        {
+          "word": "day",
+          "status": "ok"
+        }
+      ],
+      "extra": [
+        "walk",
+        "play"
+      ],
+      "accuracy": 0.75,
+      "summary": "6 de 8 palavras bateram com o alvo"
+    }
+  },
+  {
+    "id": "g_wv",
+    "target": "Where is the white car with the small wheel?",
+    "transcription": "Where is the vite car with the small veal?",
+    "focus": "seed: W vs V",
+    "diff_json": {
+      "words": [
+        {
+          "word": "where",
+          "status": "ok"
+        },
+        {
+          "word": "is",
+          "status": "ok"
+        },
+        {
+          "word": "the",
+          "status": "ok"
+        },
+        {
+          "word": "white",
+          "status": "wrong"
+        },
+        {
+          "word": "car",
+          "status": "ok"
+        },
+        {
+          "word": "with",
+          "status": "ok"
+        },
+        {
+          "word": "the",
+          "status": "ok"
+        },
+        {
+          "word": "small",
+          "status": "ok"
+        },
+        {
+          "word": "wheel",
+          "status": "wrong"
+        }
+      ],
+      "extra": [
+        "vite",
+        "veal"
+      ],
+      "accuracy": 0.778,
+      "summary": "7 de 9 palavras bateram com o alvo"
+    }
+  },
+  {
+    "id": "h_missing",
+    "target": "The young boy sang a long song at school.",
+    "transcription": "The young boy sang a song at school.",
+    "focus": "seed: -ng nasal",
+    "diff_json": {
+      "words": [
+        {
+          "word": "the",
+          "status": "ok"
+        },
+        {
+          "word": "young",
+          "status": "ok"
+        },
+        {
+          "word": "boy",
+          "status": "ok"
+        },
+        {
+          "word": "sang",
+          "status": "ok"
+        },
+        {
+          "word": "a",
+          "status": "ok"
+        },
+        {
+          "word": "long",
+          "status": "missing"
+        },
+        {
+          "word": "song",
+          "status": "ok"
+        },
+        {
+          "word": "at",
+          "status": "ok"
+        },
+        {
+          "word": "school",
+          "status": "ok"
+        }
+      ],
+      "extra": [],
+      "accuracy": 0.889,
+      "summary": "8 de 9 palavras bateram com o alvo"
+    }
+  },
+  {
+    "id": "i_r",
+    "target": "My red rabbit runs around the green grass.",
+    "transcription": "My led labbit runs around the green glass.",
+    "focus": "seed: R sound",
+    "diff_json": {
+      "words": [
+        {
+          "word": "my",
+          "status": "ok"
+        },
+        {
+          "word": "red",
+          "status": "wrong"
+        },
+        {
+          "word": "rabbit",
+          "status": "wrong"
+        },
+        {
+          "word": "runs",
+          "status": "ok"
+        },
+        {
+          "word": "around",
+          "status": "ok"
+        },
+        {
+          "word": "the",
+          "status": "ok"
+        },
+        {
+          "word": "green",
+          "status": "ok"
+        },
+        {
+          "word": "grass",
+          "status": "wrong"
+        }
+      ],
+      "extra": [
+        "led",
+        "labbit",
+        "glass"
+      ],
+      "accuracy": 0.625,
+      "summary": "5 de 8 palavras bateram com o alvo"
+    }
+  },
+  {
+    "id": "j_the_this",
+    "target": "Thank you for the things you bought me.",
+    "transcription": "Thank you for this things you bought me.",
+    "focus": "seed: TH /θ/",
+    "diff_json": {
+      "words": [
+        {
+          "word": "thank",
+          "status": "ok"
+        },
+        {
+          "word": "you",
+          "status": "ok"
+        },
+        {
+          "word": "for",
+          "status": "ok"
+        },
+        {
+          "word": "the",
+          "status": "wrong"
+        },
+        {
+          "word": "things",
+          "status": "ok"
+        },
+        {
+          "word": "you",
+          "status": "ok"
+        },
+        {
+          "word": "bought",
+          "status": "ok"
+        },
+        {
+          "word": "me",
+          "status": "ok"
+        }
+      ],
+      "extra": [
+        "this"
+      ],
+      "accuracy": 0.875,
+      "summary": "7 de 8 palavras bateram com o alvo"
+    }
+  },
+  {
+    "id": "k_boys_extra_s",
+    "target": "The young boy sang a long song at school.",
+    "transcription": "The Young Boys sang a long song at school.",
+    "focus": "-ng nasal",
+    "diff_json": {
+      "words": [
+        {
+          "word": "the",
+          "status": "ok"
+        },
+        {
+          "word": "young",
+          "status": "ok"
+        },
+        {
+          "word": "boy",
+          "status": "wrong"
+        },
+        {
+          "word": "sang",
+          "status": "ok"
+        },
+        {
+          "word": "a",
+          "status": "ok"
+        },
+        {
+          "word": "long",
+          "status": "ok"
+        },
+        {
+          "word": "song",
+          "status": "ok"
+        },
+        {
+          "word": "at",
+          "status": "ok"
+        },
+        {
+          "word": "school",
+          "status": "ok"
+        }
+      ],
+      "extra": [
+        "boys"
+      ],
+      "accuracy": 0.889,
+      "summary": "8 de 9 palavras bateram com o alvo"
+    }
+  }
+]

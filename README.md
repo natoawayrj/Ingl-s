@@ -302,6 +302,13 @@ O authtoken do ngrok já está salvo na máquina (`ngrok config add-authtoken �
 - [x] Docker: backend + MySQL em container (`docker compose up`)
 - [x] PWA instalável (manifest + service worker) — dá pra "instalar" no celular
 - [x] Praticar sons fracos: sorteia frases do som que a pessoa mais erra
+- [x] Feedback sem alucinação: pronúncia vem do CMUdict (`pronouncing`), dicas por som
+      em `app/data/focus_tips.json`, LLM só adapta; saída em JSON validada em Python
+      (sem IPA, só palavras da frase) com fallback para texto-modelo
+- [x] Palavra com baixa confiança do Whisper vira "incerta" em vez de erro (`WHISPER_MIN_CONFIDENCE`)
+- [x] Avaliação do LLM: `python -m tests.run_eval [modelo]` (de `backend/`) imprime tabela em markdown
+- [x] Chat compatível com Qwen3.5 (descarta o cumprimento inicial do bot antes de chamar o LLM)
+      e com thinking desligado (`reasoning_effort: none`)
 - [ ] Ajuste fino dos prompts depois de testar com voz real
 
 ## Rodar com Docker (backend + MySQL em container)

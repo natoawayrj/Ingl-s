@@ -47,5 +47,9 @@ LLM_API_KEY = _get("LLM_API_KEY", "")
 # detalhada (posição de língua/boca). Acima, só o feedback curto basta.
 EXPLAIN_ACCURACY_THRESHOLD = float(_get("EXPLAIN_ACCURACY_THRESHOLD", "0.8"))
 
+# Palavra errada cuja confiança no Whisper (0..1) fica abaixo disso vira "incerta"
+# (não é comentada como erro de pronúncia). 0 desliga.
+WHISPER_MIN_CONFIDENCE = float(_get("WHISPER_MIN_CONFIDENCE", "0.5"))
+
 # ffmpeg
 FFMPEG_BIN = _get("FFMPEG_BIN", "ffmpeg")

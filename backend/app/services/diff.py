@@ -64,3 +64,44 @@ def estimate_wpm(word_count: int, duration_sec: float) -> int | None:
     if not duration_sec or duration_sec <= 0:
         return None
     return round(word_count / (duration_sec / 60.0))
+
+
+def aligned_pairs(target: str, heard: str) -> list[tuple[str, str, list[int]]]:
+    """Pares (palavra-alvo, o que foi ouvido, índices em heard) dos trechos trocados.
+
+    Só pareia quando dá pra ter certeza: blocos de mesmo tamanho (1:1) ou uma
+    palavra-alvo contra um trecho ouvido.
+    """
+    tgt, hrd = _normalize(target), _normalize(heard)
+    pairs = []
+    for tag, i1, i2, j1, j2 in SequenceMatcher(a=tgt, b=hrd, autojunk=False).get_opcodes():
+        if tag != "replace":
+            continue
+        if (i2 - i1) == (j2 - j1):
+            for k in range(i2 - i1):
+                pairs.append((tgt[i1 + k], hrd[j1 + k], [j1 + k]))
+        elif (i2 - i1) == 1:
+            pairs.append((tgt[i1], " ".join(hrd[j1:j2]), list(range(j1, j2))))
+    return pairs
+
+
+def uncertain_words(target: str, heard: str, stt_words: list[dict] | None,
+                    min_conf: float) -> list[str]:
+    """Palavras-alvo 'erradas' cujo trecho ouvido tem baixa confiança no Whisper.
+
+    Nelas o erro pode ser do reconhecimento, não da pronúncia. Não altera o
+    diff_json: é só uma lista à parte. Sem confiança disponível (ou sem como
+    alinhar com certeza), devolve [].
+    """
+    if not stt_words or min_conf <= 0:
+        return []
+    probs: list[float] = []
+    for w in stt_words:
+        probs.extend([w["prob"]] * len(_normalize(w["word"])))
+    if len(probs) != len(_normalize(heard)):
+        return []
+    out: list[str] = []
+    for word, _, idx in aligned_pairs(target, heard):
+        if min(probs[i] for i in idx) < min_conf and word not in out:
+            out.append(word)
+    return out

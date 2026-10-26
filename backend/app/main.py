@@ -302,11 +302,15 @@ async def practice(
     diff = diffsvc.compare(target, transcription)
     word_count = len(diff["words"])
     wpm = diffsvc.estimate_wpm(word_count, stt.get("duration") or 0)
+    # palavras "erradas" que o Whisper nem tinha certeza de ter ouvido (não vão pro diff_json)
+    uncertain = diffsvc.uncertain_words(
+        target, transcription, stt.get("words"), config.WHISPER_MIN_CONFIDENCE
+    )
 
     # 3) feedback (LLM local)
     try:
         feedback = await llm_client.pronunciation_feedback(
-            target, transcription, diff, wpm
+            target, transcription, diff, wpm, phrase.get("focus"), uncertain
         )
     except Exception as e:
         raise HTTPException(status.HTTP_502_BAD_GATEWAY, f"LLM indisponível: {e}")
@@ -318,8 +322,8 @@ async def practice(
     if has_errors and diff["accuracy"] < config.EXPLAIN_ACCURACY_THRESHOLD:
         try:
             explanation = await llm_client.phonetic_explanation(
-                target, transcription, diff, phrase.get("focus")
-            )
+                target, transcription, diff, phrase.get("focus"), uncertain
+            ) or None
         except Exception:
             explanation = None  # bonus opcional; ignora falha
 
@@ -342,6 +346,7 @@ async def practice(
         "wpm": wpm,
         "feedback": feedback,
         "explanation": explanation,
+        "uncertain": uncertain,
     }
 
 

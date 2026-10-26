@@ -1,0 +1,204 @@
+{
+  "_status": "rascunho, revisar",
+  "_nota": "Chave = foco sem o prefixo 'seed:'. Uma dica curta por foco, em pt e en. Revisar antes de confiar.",
+  "_default": {
+    "pt": "Fale devagar, palavra por palavra, e compare o som com o de um falante nativo.",
+    "en": "Speak slowly, word by word, and compare the sound with a native speaker."
+  },
+  "-ed + GH": {
+    "pt": "No final -ed: soa /t/ depois de som sem voz, /d/ depois de som com voz, e vira sílaba extra depois de t ou d. Em palavras como 'enough' e 'laugh', o GH soa como F: dentes de cima no lábio de baixo, soprando sem voz.",
+    "en": "For -ed endings: /t/ after voiceless sounds, /d/ after voiced sounds, and an extra syllable after t or d. In words like 'enough' and 'laugh', GH sounds like F: upper teeth on the lower lip, blowing without voice."
+  },
+  "-ed + H": {
+    "pt": "No final -ed: soa /t/ depois de som sem voz, /d/ depois de som com voz, e vira sílaba extra depois de t ou d. O H inicial é só um sopro suave de ar saindo da garganta, sem raspar.",
+    "en": "For -ed endings: /t/ after voiceless sounds, /d/ after voiced sounds, and an extra syllable after t or d. Initial H is just a soft breath of air from the throat."
+  },
+  "-ed + R": {
+    "pt": "No final -ed: soa /t/ depois de som sem voz, /d/ depois de som com voz, e vira sílaba extra depois de t ou d. No R inglês a língua não encosta no céu da boca nem vibra; a ponta fica levantada perto dele, sem tocar.",
+    "en": "For -ed endings: /t/ after voiceless sounds, /d/ after voiced sounds, and an extra syllable after t or d. In the English R the tongue does not touch the roof of the mouth or vibrate; the tip is raised close to it."
+  },
+  "-ed + TH": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. No final -ed: soa /t/ depois de som sem voz, /d/ depois de som com voz, e vira sílaba extra depois de t ou d.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. For -ed endings: /t/ after voiceless sounds, /d/ after voiced sounds, and an extra syllable after t or d."
+  },
+  "-ed + consonant": {
+    "pt": "No final -ed: soa /t/ depois de som sem voz, /d/ depois de som com voz, e vira sílaba extra depois de t ou d.",
+    "en": "For -ed endings: /t/ after voiceless sounds, /d/ after voiced sounds, and an extra syllable after t or d."
+  },
+  "-ed + g sound": {
+    "pt": "No final -ed: soa /t/ depois de som sem voz, /d/ depois de som com voz, e vira sílaba extra depois de t ou d.",
+    "en": "For -ed endings: /t/ after voiceless sounds, /d/ after voiced sounds, and an extra syllable after t or d."
+  },
+  "-ed endings": {
+    "pt": "No final -ed: soa /t/ depois de som sem voz, /d/ depois de som com voz, e vira sílaba extra depois de t ou d.",
+    "en": "For -ed endings: /t/ after voiceless sounds, /d/ after voiced sounds, and an extra syllable after t or d."
+  },
+  "-ng nasal": {
+    "pt": "O final -ng é nasal: a parte de trás da língua sobe e o ar sai pelo nariz, sem 'g' forte no fim.",
+    "en": "Final -ng is nasal: the back of the tongue rises and air goes through the nose, with no hard 'g' at the end."
+  },
+  "/iː/ + -ed": {
+    "pt": "O som curto (ship, sit) é relaxado e rápido; o som longo (sheep, seat) é esticado, com os lábios abertos num leve sorriso. No final -ed: soa /t/ depois de som sem voz, /d/ depois de som com voz, e vira sílaba extra depois de t ou d.",
+    "en": "The short sound (ship, sit) is relaxed and quick; the long sound (sheep, seat) is stretched, lips in a slight smile. For -ed endings: /t/ after voiceless sounds, /d/ after voiced sounds, and an extra syllable after t or d."
+  },
+  "/ɪ/ + final": {
+    "pt": "O som curto (ship, sit) é relaxado e rápido; o som longo (sheep, seat) é esticado, com os lábios abertos num leve sorriso. Pronuncie a consoante do fim da palavra, soltando-a rápido e sem acrescentar uma vogal depois.",
+    "en": "The short sound (ship, sit) is relaxed and quick; the long sound (sheep, seat) is stretched, lips in a slight smile. Say the consonant at the end of the word, releasing it quickly without adding a vowel after it."
+  },
+  "/ɪ/ vs /iː/": {
+    "pt": "O som curto (ship, sit) é relaxado e rápido; o som longo (sheep, seat) é esticado, com os lábios abertos num leve sorriso.",
+    "en": "The short sound (ship, sit) is relaxed and quick; the long sound (sheep, seat) is stretched, lips in a slight smile."
+  },
+  "GH /f/ + R": {
+    "pt": "No R inglês a língua não encosta no céu da boca nem vibra; a ponta fica levantada perto dele, sem tocar. Em palavras como 'enough' e 'laugh', o GH soa como F: dentes de cima no lábio de baixo, soprando sem voz.",
+    "en": "In the English R the tongue does not touch the roof of the mouth or vibrate; the tip is raised close to it. In words like 'enough' and 'laugh', GH sounds like F: upper teeth on the lower lip, blowing without voice."
+  },
+  "H sound": {
+    "pt": "O H inicial é só um sopro suave de ar saindo da garganta, sem raspar.",
+    "en": "Initial H is just a soft breath of air from the throat."
+  },
+  "R + TH": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. No R inglês a língua não encosta no céu da boca nem vibra; a ponta fica levantada perto dele, sem tocar.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. In the English R the tongue does not touch the roof of the mouth or vibrate; the tip is raised close to it."
+  },
+  "R + W": {
+    "pt": "No R inglês a língua não encosta no céu da boca nem vibra; a ponta fica levantada perto dele, sem tocar. W: lábios arredondados, sem dentes. V: dentes de cima tocando o lábio de baixo, com a voz vibrando.",
+    "en": "In the English R the tongue does not touch the roof of the mouth or vibrate; the tip is raised close to it. W: rounded lips, no teeth. V: upper teeth touching the lower lip, with voice."
+  },
+  "R sound": {
+    "pt": "No R inglês a língua não encosta no céu da boca nem vibra; a ponta fica levantada perto dele, sem tocar.",
+    "en": "In the English R the tongue does not touch the roof of the mouth or vibrate; the tip is raised close to it."
+  },
+  "TH + -ed": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. No final -ed: soa /t/ depois de som sem voz, /d/ depois de som com voz, e vira sílaba extra depois de t ou d.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. For -ed endings: /t/ after voiceless sounds, /d/ after voiced sounds, and an extra syllable after t or d."
+  },
+  "TH + -worth": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on."
+  },
+  "TH + /iː/": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. O som curto (ship, sit) é relaxado e rápido; o som longo (sheep, seat) é esticado, com os lábios abertos num leve sorriso.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. The short sound (ship, sit) is relaxed and quick; the long sound (sheep, seat) is stretched, lips in a slight smile."
+  },
+  "TH + /ɪ/": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. O som curto (ship, sit) é relaxado e rápido; o som longo (sheep, seat) é esticado, com os lábios abertos num leve sorriso.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. The short sound (ship, sit) is relaxed and quick; the long sound (sheep, seat) is stretched, lips in a slight smile."
+  },
+  "TH + R": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. No R inglês a língua não encosta no céu da boca nem vibra; a ponta fica levantada perto dele, sem tocar.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. In the English R the tongue does not touch the roof of the mouth or vibrate; the tip is raised close to it."
+  },
+  "TH + R cluster": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. Junte as consoantes sem colocar vogal no meio (str, não 'istr'); fale as letras coladas e rápidas.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. Join the consonants without adding a vowel between them (str, not 'istr'); say them tightly and quickly."
+  },
+  "TH + W": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. W: lábios arredondados, sem dentes. V: dentes de cima tocando o lábio de baixo, com a voz vibrando.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. W: rounded lips, no teeth. V: upper teeth touching the lower lip, with voice."
+  },
+  "TH + cluster": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. Junte as consoantes sem colocar vogal no meio (str, não 'istr'); fale as letras coladas e rápidas.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. Join the consonants without adding a vowel between them (str, not 'istr'); say them tightly and quickly."
+  },
+  "TH /ð/ + -ed": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. No final -ed: soa /t/ depois de som sem voz, /d/ depois de som com voz, e vira sílaba extra depois de t ou d.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. For -ed endings: /t/ after voiceless sounds, /d/ after voiced sounds, and an extra syllable after t or d."
+  },
+  "TH /ð/ + R": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. No R inglês a língua não encosta no céu da boca nem vibra; a ponta fica levantada perto dele, sem tocar.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. In the English R the tongue does not touch the roof of the mouth or vibrate; the tip is raised close to it."
+  },
+  "TH /ð/ + cluster": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. Junte as consoantes sem colocar vogal no meio (str, não 'istr'); fale as letras coladas e rápidas.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. Join the consonants without adding a vowel between them (str, not 'istr'); say them tightly and quickly."
+  },
+  "TH /θ/": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on."
+  },
+  "TH /θ/ + W": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. W: lábios arredondados, sem dentes. V: dentes de cima tocando o lábio de baixo, com a voz vibrando.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. W: rounded lips, no teeth. V: upper teeth touching the lower lip, with voice."
+  },
+  "TH /θ/ /ð/": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on."
+  },
+  "V + TH + str": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. Junte as consoantes sem colocar vogal no meio (str, não 'istr'); fale as letras coladas e rápidas.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. Join the consonants without adding a vowel between them (str, not 'istr'); say them tightly and quickly."
+  },
+  "W vs V": {
+    "pt": "W: lábios arredondados, sem dentes. V: dentes de cima tocando o lábio de baixo, com a voz vibrando.",
+    "en": "W: rounded lips, no teeth. V: upper teeth touching the lower lip, with voice."
+  },
+  "cluster + -ed": {
+    "pt": "No final -ed: soa /t/ depois de som sem voz, /d/ depois de som com voz, e vira sílaba extra depois de t ou d. Junte as consoantes sem colocar vogal no meio (str, não 'istr'); fale as letras coladas e rápidas.",
+    "en": "For -ed endings: /t/ after voiceless sounds, /d/ after voiced sounds, and an extra syllable after t or d. Join the consonants without adding a vowel between them (str, not 'istr'); say them tightly and quickly."
+  },
+  "cluster + TH": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. Junte as consoantes sem colocar vogal no meio (str, não 'istr'); fale as letras coladas e rápidas.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. Join the consonants without adding a vowel between them (str, not 'istr'); say them tightly and quickly."
+  },
+  "cluster + W/V": {
+    "pt": "Junte as consoantes sem colocar vogal no meio (str, não 'istr'); fale as letras coladas e rápidas. W: lábios arredondados, sem dentes. V: dentes de cima tocando o lábio de baixo, com a voz vibrando.",
+    "en": "Join the consonants without adding a vowel between them (str, not 'istr'); say them tightly and quickly. W: rounded lips, no teeth. V: upper teeth touching the lower lip, with voice."
+  },
+  "cluster + smooth TH": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. Junte as consoantes sem colocar vogal no meio (str, não 'istr'); fale as letras coladas e rápidas.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. Join the consonants without adding a vowel between them (str, not 'istr'); say them tightly and quickly."
+  },
+  "cluster bl/br": {
+    "pt": "Junte as consoantes sem colocar vogal no meio (str, não 'istr'); fale as letras coladas e rápidas.",
+    "en": "Join the consonants without adding a vowel between them (str, not 'istr'); say them tightly and quickly."
+  },
+  "cluster scr/str": {
+    "pt": "Junte as consoantes sem colocar vogal no meio (str, não 'istr'); fale as letras coladas e rápidas.",
+    "en": "Join the consonants without adding a vowel between them (str, not 'istr'); say them tightly and quickly."
+  },
+  "cluster sp/st": {
+    "pt": "Junte as consoantes sem colocar vogal no meio (str, não 'istr'); fale as letras coladas e rápidas.",
+    "en": "Join the consonants without adding a vowel between them (str, not 'istr'); say them tightly and quickly."
+  },
+  "cluster str": {
+    "pt": "Junte as consoantes sem colocar vogal no meio (str, não 'istr'); fale as letras coladas e rápidas.",
+    "en": "Join the consonants without adding a vowel between them (str, not 'istr'); say them tightly and quickly."
+  },
+  "cluster str + -ths": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. Junte as consoantes sem colocar vogal no meio (str, não 'istr'); fale as letras coladas e rápidas.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. Join the consonants without adding a vowel between them (str, not 'istr'); say them tightly and quickly."
+  },
+  "cluster str/scr": {
+    "pt": "Junte as consoantes sem colocar vogal no meio (str, não 'istr'); fale as letras coladas e rápidas.",
+    "en": "Join the consonants without adding a vowel between them (str, not 'istr'); say them tightly and quickly."
+  },
+  "cluster str/spr": {
+    "pt": "Junte as consoantes sem colocar vogal no meio (str, não 'istr'); fale as letras coladas e rápidas.",
+    "en": "Join the consonants without adding a vowel between them (str, not 'istr'); say them tightly and quickly."
+  },
+  "consoante final": {
+    "pt": "Pronuncie a consoante do fim da palavra, soltando-a rápido e sem acrescentar uma vogal depois.",
+    "en": "Say the consonant at the end of the word, releasing it quickly without adding a vowel after it."
+  },
+  "consonant clusters": {
+    "pt": "Junte as consoantes sem colocar vogal no meio (str, não 'istr'); fale as letras coladas e rápidas.",
+    "en": "Join the consonants without adding a vowel between them (str, not 'istr'); say them tightly and quickly."
+  },
+  "live/leave": {
+    "pt": "Em 'live' o som é curto e relaxado; em 'leave' é longo e esticado.",
+    "en": "'live' has a short, relaxed vowel; 'leave' has a long, stretched one."
+  },
+  "vowel + W/V": {
+    "pt": "W: lábios arredondados, sem dentes. V: dentes de cima tocando o lábio de baixo, com a voz vibrando.",
+    "en": "W: rounded lips, no teeth. V: upper teeth touching the lower lip, with voice."
+  },
+  "vowel /æ/": {
+    "pt": "Abra bem a boca, num som entre 'é' e 'a'; é mais aberto que o 'é' do português.",
+    "en": "Open your mouth wide, a sound between 'eh' and 'ah'."
+  },
+  "vowel /æ/ + TH": {
+    "pt": "Língua levemente entre os dentes, soltando o ar. TH surdo (think, three): sem vibrar a voz; TH sonoro (this, the): com a voz vibrando. Abra bem a boca, num som entre 'é' e 'a'; é mais aberto que o 'é' do português.",
+    "en": "Tongue lightly between the teeth, air flowing out. Voiceless TH (think, three): no voice; voiced TH (this, the): voice on. Open your mouth wide, a sound between 'eh' and 'ah'."
+  }
+}

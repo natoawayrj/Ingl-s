@@ -7,9 +7,10 @@ Fluxo:
 whisper.cpp server: build com -DGGML_VULKAN=1 (acelera na RX 6900 XT) e rode:
   whisper-server -m models/ggml-medium.en.bin --host 127.0.0.1 --port 8080
 """
+import os
+import re
 import subprocess
 import tempfile
-import os
 
 import httpx
 
@@ -76,7 +77,8 @@ async def _transcribe_openai(wav: bytes) -> dict:
 
 async def _transcribe_whispercpp(wav: bytes) -> dict:
     files = {"file": ("audio.wav", wav, "audio/wav")}
-    data = {"response_format": "json", "language": "en", "temperature": "0"}
+    # verbose_json traz a probabilidade de cada token (usada p/ marcar palavra "incerta")
+    data = {"response_format": "verbose_json", "language": "en", "temperature": "0"}
     async with httpx.AsyncClient(timeout=120) as client:
         resp = await client.post(config.WHISPER_URL, files=files, data=data)
         resp.raise_for_status()
@@ -90,4 +92,26 @@ async def _transcribe_whispercpp(wav: bytes) -> dict:
         duration = last.get("end") or last.get("t1")
         if isinstance(duration, (int, float)) and duration > 1000:
             duration = duration / 100.0  # alguns builds usam centissegundos
-    return {"text": text, "duration": duration}
+    return {"text": text, "duration": duration, "words": _words_with_confidence(segments)}
+
+
+def _words_with_confidence(segments) -> list[dict] | None:
+    """Junta os tokens do verbose_json em palavras: [{word, prob}] (prob = menor token).
+
+    Token com espaço na frente começa palavra nova; sem espaço continua a anterior;
+    pontuação pura é ignorada (senão o '.' puxaria a confiança da última palavra).
+    """
+    if not isinstance(segments, list):
+        return None
+    words: list[dict] = []
+    for seg in segments:
+        for tok in seg.get("words") or []:
+            txt, prob = tok.get("word") or "", tok.get("probability")
+            if not re.search(r"[A-Za-z0-9]", txt) or not isinstance(prob, (int, float)):
+                continue
+            if txt[:1].isspace() or not words:
+                words.append({"word": txt.strip(), "prob": prob})
+            else:
+                words[-1]["word"] += txt
+                words[-1]["prob"] = min(words[-1]["prob"], prob)
+    return words or None
