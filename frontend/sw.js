@@ -1,5 +1,5 @@
 // Service worker minimo: instalavel + shell cacheado. Nunca cacheia /api.
-const CACHE = "pronuncia-v1";
+const CACHE = "pronuncia-v2";
 const SHELL = ["/", "/index.html", "/manifest.json", "/icon.svg"];
 
 self.addEventListener("install", (e) => {

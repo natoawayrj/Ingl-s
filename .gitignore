@@ -1,6 +1,7 @@
 # segredos — NUNCA versionar
 .env
 backend/.env
+usuario.md
 
 # python
 __pycache__/

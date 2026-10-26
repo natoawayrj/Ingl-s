@@ -218,6 +218,8 @@
   .w-wrong { color:var(--bad); text-decoration:underline wavy var(--bad);
     text-underline-offset:3px; cursor:pointer; }
   .w-missing { color:var(--faint); text-decoration:line-through; }
+  .w-unsure { color:var(--warn); text-decoration:underline dotted var(--warn);
+    text-underline-offset:3px; cursor:help; }
   .heard { font-size:13px; color:var(--muted); margin-top:8px;
     font-family:'JetBrains Mono',monospace; }
   .heard b { color:var(--ink); }
@@ -452,6 +454,7 @@
         <div class="explain hidden" id="explainView">
           <div class="explain-title">👅 COMO CORRIGIR OS SONS</div>
           <div id="explainBody"></div>
+          <div style="font-size:11px;margin-top:8px;color:var(--muted)">dica gerada por IA, pode conter erros</div>
         </div>
       </div>
     </div>
@@ -843,6 +846,9 @@ function showResult(res) {
   }
   // diff colorido (clique na palavra errada => ouvir só ela)
   document.getElementById("diffView").innerHTML = res.diff.words.map(w => {
+    // 'uncertain': o Whisper não tinha certeza do que ouviu (pode não ser erro de quem leu)
+    if (w.status === "wrong" && (res.uncertain || []).includes(w.word))
+      return `<span class="w-unsure" title="o reconhecimento não teve certeza desta palavra">${escapeHtml(w.word)}</span>`;
     const cls = w.status === "ok" ? "w-ok" : w.status === "wrong" ? "w-wrong" : "w-missing";
     const click = w.status === "wrong" ? ` onclick="sayWord('${escapeHtml(w.word).replace(/'/g,"")}')"` : "";
     return `<span class="${cls}"${click}>${escapeHtml(w.word)}</span>`;
@@ -1097,6 +1103,9 @@ async function sendChat() {
     chatHistory.push({ role: "assistant", content: res.reply || "…" });
     renderChat();
   } catch (e) {
+    // tira a mensagem que falhou do histórico (senão é reenviada duplicada) e devolve o texto ao campo
+    chatHistory.pop();
+    inp.value = text;
     document.getElementById("chatErr").textContent = e.message;
     renderChat();
   } finally {
